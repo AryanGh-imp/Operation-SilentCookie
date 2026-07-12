@@ -690,9 +690,13 @@ capabilities, and additional artifacts, see:
 
 [PureLogs Malware Analysis](malware/malware-analysis.md)
 
+The malware analysis document is an ongoing research effort and will be
+expanded over time as additional artifacts, behavioral observations, and
+technical findings are collected.
+
 Keeping these topics separate allows the incident timeline to remain focused
-while providing a dedicated technical document for reverse engineering and
-threat analysis.
+while providing a dedicated technical document for malware research,
+reverse engineering, and threat analysis.
 
 ---
 
