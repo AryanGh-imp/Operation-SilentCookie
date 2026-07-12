@@ -312,7 +312,7 @@ referenced files across the system.
 The search immediately revealed a Task Scheduler definition associated with the
 suspicious process.
 
-![TreeSize showing multiple CoreWorker scheduled task definitions](evidence/images/investigation/04-treesize-coreworker-task-definitions.png)
+![TreeSize showing multiple CoreWorker scheduled task definitions](evidence/images/investigation/02-treesize-coreworker-task-definitions.png)
 
 This discovery suggested that the executable was being launched through a
 scheduled task, indicating the presence of a persistence mechanism.
@@ -342,7 +342,7 @@ CoreWorker_<random_string>
 Only one instance was actively running while the remaining tasks were waiting
 for their configured triggers.
 
-![Windows Task Scheduler showing multiple CoreWorker scheduled tasks](evidence/images/investigation/02-task-scheduler-coreworker-tasks.png)
+![Windows Task Scheduler showing multiple CoreWorker scheduled tasks](evidence/images/investigation/03-task-scheduler-coreworker-tasks.png)
 
 
 
