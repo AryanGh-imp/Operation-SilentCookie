@@ -312,7 +312,7 @@ referenced files across the system.
 The search immediately revealed a Task Scheduler definition associated with the
 suspicious process.
 
-![TreeSize showing multiple CoreWorker scheduled task definitions](evidence/images/investigation/03-treesize-coreworker-task-definitions.png)
+![TreeSize showing multiple CoreWorker scheduled task definitions](evidence/images/investigation/04-treesize-coreworker-task-definitions.png)
 
 This discovery suggested that the executable was being launched through a
 scheduled task, indicating the presence of a persistence mechanism.
