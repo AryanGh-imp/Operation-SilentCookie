@@ -9,16 +9,19 @@
 ![Platform](https://img.shields.io/badge/platform-Windows%2011-blue)
 ![Focus](https://img.shields.io/badge/focus-Malware%20Analysis-orange)
 ![Threat](https://img.shields.io/badge/threat-Information%20Stealer-critical)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 
 ## Table of Contents
 
 - [Overview](#overview)
 - [Key Findings](#key-findings)
-- [Tools Used](#tools-used)
 - [Investigation Timeline](#investigation-timeline)
+- [Investigation Environment](#investigation-environment)
+- [Tools Used](#tools-used)
+- [Repository Structure](#repository-structure)
 
-- [Investigation Phase](#investigation-phase)
+- [Incident Investigation Phase](#incident-investigation-phase)
   - [Initial Crash Investigation](#initial-crash-investigation)
   - [Crash Dump Analysis](#crash-dump-analysis)
   - [Suspicious Process Discovery](#suspicious-process-discovery)
@@ -44,12 +47,13 @@
   - [Malware Identification](#malware-identification)
   - [Malware Analysis](#malware-analysis)
 
-- [Prevention Recommendations](#prevention-recommendations)
-- [Lessons Learned](#lessons-learned)
-- [References](#references)
-- [Future Work](#future-work)
-- [Disclaimer](#disclaimer)
-- [Author](#author)
+- [Final Documentation](#final-documentation)
+  - [Prevention Recommendations](#prevention-recommendations)
+  - [Lessons Learned](#lessons-learned)
+  - [References](#references)
+  - [Future Work](#future-work)
+  - [Disclaimer](#disclaimer)
+  - [Author](#author)
 
 ---
 
@@ -68,7 +72,7 @@ process behavior.
 This investigation documents the complete response lifecycle, including
 root-cause identification, malware analysis, containment, and system recovery.
 
----
+
 ## Key Findings
 
 | Finding | Result |
@@ -81,7 +85,27 @@ root-cause identification, malware analysis, containment, and system recovery.
 | Digital Signature | Not Signed |
 | Malware Classification | PureLogs Information Stealer |
 | Primary Target | Browser credentials and cookies |
+| Incident Status | Resolved |
 
+
+## Investigation Timeline
+
+The investigation progressed through the following major stages.
+
+![Investigation Timeline](evidence/images/investigation/01-investigation-timeline.png)
+
+
+
+## Investigation Environment
+
+| Component         | Value              |
+| ----------------- | ------------------ |
+| Operating System  | Windows 11         |
+| Device            | ASUS ROG G614JV    |
+| Firmware          | UEFI               |
+| Architecture      | x64                |
+| File System       | NTFS               |
+| Security Software | Microsoft Defender |
 
 ## Tools Used
 
@@ -107,43 +131,35 @@ root-cause identification, malware analysis, containment, and system recovery.
 - ElevenForum
 
 
-## Investigation Timeline
+## Repository Structure
 
-The following timeline summarizes the major stages of the investigation:
-
-```text
-Unexpected Sleep / Power State Crash
-              │
-              ▼
-Ubuntu Live Environment Test
-(Hardware issue reduced)
-              │
-              ▼
-Windows Event Log & Crash Dump Analysis
-(WinDbg)
-              │
-              ▼
-CRITICAL_PROCESS_DIED (0xEF) Identified
-              │
-              ▼
-Suspicious Process Discovery
-(CoreWorker_<random_suffix>.exe)
-              │
-              ▼
-Persistence Mechanism Investigation
-(Scheduled Task + AppData Execution)
-              │
-              ▼
-Malware Identification
-(PureLogs Information Stealer)
-              │
-              ▼
-Containment and System Recovery
 ```
+Operation-SilentCookie/
+│
+├── README.md
+├── LICENSE
+├── .gitignore
+│
+├── malware/
+│   └── malware-analysis.md
+│
+└── evidence/
+    ├── images/
+    │   ├── investigation/
+    │   └── malware/
+    │
+    └── artifacts/
+        ├── investigation/
+        └── malware/
+```
+
+- **README.md** – Main DFIR investigation report.
+- **malware/** – Technical analysis of the identified PureLogs malware.
+- **evidence/** – Sanitized screenshots and forensic artifacts collected during the investigation.
 
 ---
 
-## Investigation Phase
+## Incident Investigation Phase
 
 The following sections document the investigation from the initial system crash
 to the discovery of the malware persistence mechanism.
@@ -296,7 +312,7 @@ referenced files across the system.
 The search immediately revealed a Task Scheduler definition associated with the
 suspicious process.
 
-![TreeSize showing multiple CoreWorker scheduled task definitions](evidence/images/01-treesize-coreworker-task-definitions.png)
+![TreeSize showing multiple CoreWorker scheduled task definitions](evidence/images/investigation/03-treesize-coreworker-task-definitions.png)
 
 This discovery suggested that the executable was being launched through a
 scheduled task, indicating the presence of a persistence mechanism.
@@ -326,7 +342,7 @@ CoreWorker_<random_string>
 Only one instance was actively running while the remaining tasks were waiting
 for their configured triggers.
 
-![Windows Task Scheduler showing multiple CoreWorker scheduled tasks](evidence/images/02-task-scheduler-coreworker-tasks.png)
+![Windows Task Scheduler showing multiple CoreWorker scheduled tasks](evidence/images/investigation/02-task-scheduler-coreworker-tasks.png)
 
 
 
@@ -362,7 +378,7 @@ The folder name was searched across multiple public sources.
 Multiple reports associated this directory with malware campaigns and browser
 credential stealers.
 
-![OSINT search results for the MpDefenderCoreFolder directory](evidence/images/03-mpdefendercorefolder-osint-search.png)
+![OSINT search results for the MpDefenderCoreFolder directory](evidence/images/investigation/04-mpdefendercorefolder-osint-search.png)
 
 
 
@@ -443,7 +459,7 @@ providing persistence across system restarts.
 
 The full sanitized XML artifact is available here:
 
-[View sanitized Task Scheduler XML](evidence/artifacts/01-coreworker-task.xml)
+[View sanitized Task Scheduler XML](evidence/artifacts/investigation/01-coreworker-task.xml)
 
 
 
@@ -615,6 +631,8 @@ Both commands completed successfully, indicating that Windows system files had
 not been left in a corrupted state after the incident.
 
 
+---
+
 ## Malware Research Phase
 
 At this point, the immediate incident had been contained.
@@ -639,9 +657,9 @@ analysis databases for similar samples.
 
 One of the most relevant findings was the following public sandbox report:
 
-**Joe Sandbox Analysis**
+**Primary Intelligence Source**
 
-https://www.joesandbox.com/analysis/1891885/0/html
+[Joe Sandbox Report - Analysis ID 1891885](https://www.joesandbox.com/analysis/1891885/0/html)
 
 The observed behavior closely matched the artifacts discovered during this
 investigation.
@@ -678,7 +696,9 @@ threat analysis.
 
 ---
 
-## Prevention Recommendations
+## Final Documentation
+
+### Prevention Recommendations
 
 This incident highlighted several defensive practices that can significantly
 reduce the risk of similar infections.
@@ -699,9 +719,8 @@ Recommended security practices include:
 - Keep offline backups of important files.
 - Periodically review Windows Event Viewer for unexpected critical events.
 
----
 
-## Lessons Learned
+### Lessons Learned
 
 This investigation reinforced several important technical lessons.
 
@@ -713,9 +732,8 @@ This investigation reinforced several important technical lessons.
 - A missing digital signature alone does not prove malware, but when combined with persistence, suspicious execution paths, and abnormal system behavior, it becomes a strong indicator.
 - Combining Event Viewer, WinDbg, PowerShell, Task Scheduler analysis, OSINT, and public sandbox reports produces significantly better results than relying on a single investigative tool.
 
----
 
-## References
+### References
 
 The following resources significantly contributed to this investigation:
 
@@ -732,9 +750,8 @@ Related community investigation:
 
 Special thanks to the ElevenForum community members who helped analyze the crash dumps and provided valuable troubleshooting suggestions throughout the investigation.
 
----
 
-## Future Work
+### Future Work
 
 Future improvements may include:
 
@@ -743,9 +760,8 @@ Future improvements may include:
 - Detection methods for similar threats
 - Further investigation of malware behavior
 
----
 
-## Disclaimer
+### Disclaimer
 
 This repository is intended exclusively for educational, research, digital
 forensics, and defensive cybersecurity purposes.
@@ -757,9 +773,8 @@ All screenshots, logs, crash dumps, registry exports, scheduled task
 definitions, and forensic artifacts have been reviewed and sanitized before
 publication.
 
----
 
-## Author
+### Author
 
 **Aryan Ghasemi**
 
