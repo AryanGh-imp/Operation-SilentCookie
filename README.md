@@ -748,12 +748,6 @@ The following resources significantly contributed to this investigation:
 - Broadcom Threat Research
 - ElevenForum Community
 
-Related community investigation:
-
-[ElevenForum: Repeated CRITICAL_PROCESS_DIED (0xEF) during Idle / AC unplug](https://www.elevenforum.com/t/repeated-critical_process_died-0xef-only-during-idle-ac-unplug-asus-rog-g614jv-coreworker_eis.47963/)
-
-Special thanks to the ElevenForum community members who helped analyze the crash dumps and provided valuable troubleshooting suggestions throughout the investigation.
-
 
 ### Future Work
 
